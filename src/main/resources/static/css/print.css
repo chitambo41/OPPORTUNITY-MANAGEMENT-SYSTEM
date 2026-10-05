@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Print styles — report cards & receipts. One page per report card.
+   ========================================================================== */
+@media print {
+    body { background: #fff; }
+
+    /* Hide the app UI; show only the print root */
+    .shell, .login-view, .toast-container, .modal-overlay { display: none !important; }
+
+    .print-root { display: block !important; }
+
+    .print-root * { visibility: visible; }
+
+    .report-card-sheet {
+        page-break-after: always;
+        break-after: page;
+        border: 2px solid #333;
+        border-radius: 6px;
+        padding: 18px 22px;
+        margin-bottom: 14px;
+        color: #000;
+    }
+    .report-card-sheet:last-child { page-break-after: auto; break-after: auto; }
+
+    .rc-header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 8px; margin-bottom: 10px; }
+    .rc-header h1 { margin: 0; font-size: 20px; letter-spacing: .04em; }
+    .rc-header .rc-sub { font-size: 12px; margin-top: 2px; }
+    .rc-meta { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 12.5px; margin-bottom: 10px; }
+    .rc-meta div { white-space: nowrap; }
+
+    .rc-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 10px; }
+    .rc-table th, .rc-table td { border: 1px solid #444; padding: 5px 8px; text-align: left; }
+    .rc-table th { background: #f0f0f0; }
+
+    .rc-summary { display: flex; flex-wrap: wrap; gap: 4px 26px; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .rc-remarks { font-size: 12.5px; border: 1px dashed #666; padding: 8px; min-height: 40px; margin-top: 8px; }
+    .rc-footer { display: flex; justify-content: space-between; margin-top: 26px; font-size: 12px; }
+    .rc-footer .line { border-top: 1px solid #333; padding-top: 3px; min-width: 160px; text-align: center; }
+
+    /* Receipt */
+    .receipt-sheet {
+        width: 320px; margin: 0 auto; border: 1.5px solid #333;
+        padding: 14px 16px; font-size: 12.5px; color: #000;
+    }
+    .receipt-sheet h2 { text-align: center; margin: 0 0 2px; font-size: 16px; }
+    .receipt-sheet .rc-sub { text-align: center; font-size: 11px; margin-bottom: 10px; }
+    .receipt-sheet table { width: 100%; border-collapse: collapse; }
+    .receipt-sheet td { padding: 3px 2px; vertical-align: top; }
+    .receipt-sheet td.r { text-align: right; font-weight: 600; }
+    .receipt-sheet .total-row td { border-top: 1.5px solid #333; font-size: 13.5px; padding-top: 6px; }
+    .receipt-sheet .thanks { text-align: center; margin-top: 14px; font-size: 11px; }
+
+    .no-print { display: none !important; }
+}
+
+/* On screen, the print root is invisible and non-interactive */
+.print-root { display: none; }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Nursery School — Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/print.css">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <div id="app">
+        <!-- ======================= APP SHELL ======================= -->
+        <div id="shell" class="shell">
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-brand">
+                    <img class="brand-icon" src="images/oes-logo.jpg" alt="">
+                    <span class="brand-text">Opportunity</span>
+                </div>
+                <nav id="sidebar-nav" class="sidebar-nav"><!-- links injected by router --></nav>
+                <div class="sidebar-footer">
+                    <button id="logout-btn" class="btn btn-ghost btn-block">Log out</button>
+                </div>
+            </aside>
+
+            <div class="main">
+                <header class="topbar">
+                    <button id="sidebar-toggle" class="icon-btn" aria-label="Toggle menu">☰</button>
+                    <h2 id="page-title">Dashboard</h2>
+                    <div class="topbar-right">
+                        <span id="topbar-context" class="context-chip"></span>
+                        <span id="topbar-user" class="user-chip"></span>
+                    </div>
+                </header>
+                <main id="content" class="content">
+                    <!-- module views are injected here -->
+                </main>
+            </div>
+        </div>
+
+        <!-- ======================= TOASTS & MODALS ======================= -->
+        <div id="toast-container" class="toast-container"></div>
+        <div id="modal-root"></div>
+        <div id="print-root" class="print-root"></div>
+    </div>
+
+    <!-- Core -->
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
+    <!-- Modules -->
+    <script src="js/modules/dashboard.js"></script>
+    <script src="js/modules/years.js"></script>
+    <script src="js/modules/teachers.js"></script>
+    <script src="js/modules/subjects.js"></script>
+    <script src="js/modules/classes.js"></script>
+    <script src="js/modules/students.js"></script>
+    <script src="js/modules/promotion.js"></script>
+    <script src="js/modules/attendance.js"></script>
+    <script src="js/modules/exams.js"></script>
+    <script src="js/modules/results.js"></script>
+    <script src="js/modules/fees.js"></script>
+    <script src="js/modules/myclasses.js"></script>
+    <script src="js/init.js"></script>
+</body>
+</html>
