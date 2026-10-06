@@ -37,7 +37,7 @@ body {
 .login-view {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(rgba(22, 35, 61, .42), rgba(22, 35, 61, .42)), url("../images/background.jpg") center / cover no-repeat;
+    background: linear-gradient(135deg, #16233d 0%, #2f6fed 100%);
     padding: 20px;
 }
 .login-card {
