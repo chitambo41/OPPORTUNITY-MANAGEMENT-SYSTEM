@@ -211,7 +211,7 @@
     async function profileDialog(id) {
         const p = await API.admin.students.get(id);
         const s = p.student;
-        UI.modal({
+        const { overlay } = UI.modal({
             title: `${s.fullName} — ${s.admissionNumber}`,
             large: true,
             body: `
@@ -244,10 +244,15 @@
                         { label: 'Paid', render: r => UI.money(r.paid) },
                         { label: 'Balance', render: r => UI.money(r.balance) },
                         { label: 'Status', render: r => (UI.statusBadge[r.status] ? UI.statusBadge[r.status]() : r.status) },
+                        { label: '', tdClass: 'actions', render: r => r.status === 'PAID'
+                            ? `<button class="btn btn-outline btn-sm" data-print-fee="${r.termId}">Print receipt</button>`
+                            : '' },
                     ],
                     rows: p.fees,
                     empty: 'No fee records',
                 })}`,
         });
+        overlay.querySelectorAll('[data-print-fee]').forEach(button => button.addEventListener('click', () =>
+            window.FeeReceipts.printForTerm(s.id, Number(button.dataset.printFee))));
     }
 })();

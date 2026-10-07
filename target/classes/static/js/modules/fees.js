@@ -97,7 +97,8 @@
                     { label: 'Status', render: r => (UI.statusBadge[r.status] ? UI.statusBadge[r.status]() : r.status) },
                     { label: '', tdClass: 'actions', render: r => `
                         <button class="btn btn-outline btn-sm" data-pay="${r.studentId}" data-name="${UI.esc(r.studentName)}">Payment</button>
-                        <button class="btn btn-outline btn-sm" data-stmt="${r.studentId}">Statement</button>` },
+                        <button class="btn btn-outline btn-sm" data-stmt="${r.studentId}">Statement</button>
+                        ${r.status === 'PAID' ? `<button class="btn btn-outline btn-sm" data-print-paid="${r.studentId}" data-term="${r.termId}">Print receipt</button>` : ''}` },
                 ],
                 rows,
                 empty: 'No students match these filters',
@@ -107,6 +108,8 @@
                 paymentDialog(Number(b.dataset.pay), b.dataset.name, () => { statusTabRefresh(panel); window.Router.handle(); })));
             panel.querySelectorAll('[data-stmt]').forEach(b => b.addEventListener('click', () =>
                 statementDialog(Number(b.dataset.stmt))));
+            panel.querySelectorAll('[data-print-paid]').forEach(b => b.addEventListener('click', () =>
+                printReceiptForTerm(Number(b.dataset.printPaid), Number(b.dataset.term))));
         };
         panel.querySelector('#s-term').addEventListener('change', load);
         panel.querySelector('#s-class').addEventListener('change', load);
@@ -186,6 +189,38 @@
         });
     }
 
+    async function printReceiptForTerm(studentId, termId) {
+        const statement = await API.admin.fees.statement(studentId);
+        const line = (statement.lines || []).find(item => Number(item.termId) === termId);
+        if (!line || line.status !== 'PAID' || !line.payments.length) {
+            UI.toast('No paid receipt is available for this term', 'warn');
+            return;
+        }
+        if (line.payments.length === 1) {
+            await showReceipt(line.payments[0].receiptNumber);
+            return;
+        }
+
+        const { overlay, close } = UI.modal({
+            title: `Select receipt — ${statement.student.fullName}`,
+            body: UI.table({
+                columns: [
+                    { label: 'Receipt', key: 'receiptNumber' },
+                    { label: 'Date', render: payment => UI.fmtDate(payment.paymentDate) },
+                    { label: 'Method', key: 'method' },
+                    { label: 'Amount', render: payment => UI.money(payment.amount) },
+                    { label: '', tdClass: 'actions', render: payment =>
+                        `<button class="btn btn-outline btn-sm" data-print-receipt="${UI.esc(payment.receiptNumber)}">Print</button>` },
+                ],
+                rows: line.payments,
+            }),
+        });
+        overlay.querySelectorAll('[data-print-receipt]').forEach(button => button.addEventListener('click', () => {
+            close();
+            showReceipt(button.dataset.printReceipt);
+        }));
+    }
+
     // ---------------- Tab: fee structures ----------------
     async function structuresTab(panel, terms, classes) {
         panel.innerHTML = `
@@ -263,4 +298,6 @@
             footer: `<button class="btn btn-outline" onclick="document.querySelector('.modal-overlay').remove()">Close</button>`,
         });
     }
+
+    window.FeeReceipts = { printForTerm: printReceiptForTerm };
 })();
