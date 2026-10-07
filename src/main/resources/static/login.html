@@ -13,18 +13,85 @@
             <img class="login-logo" src="images/oes-logo.jpg" alt="Opportunity Nursery School logo">
             <h1>Opportunity Nursery School</h1>
             <p class="login-sub">Management System</p>
-            <form id="login-form" novalidate>
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" placeholder="admin@oes.com" autocomplete="username" required>
+            <div id="login-status" class="login-status" role="status" hidden></div>
+            <section id="login-panel">
+                <form id="login-form" novalidate>
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="admin@oes.com" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <div id="login-error" class="form-error" hidden></div>
+                    <button type="submit" class="btn btn-primary btn-block" id="login-btn">Sign in</button>
+                </form>
+                <div class="login-links">
+                    <button type="button" class="login-link" id="show-forgot">Forgot password?</button>
+                    <button type="button" class="login-link" id="show-register">Register as a teacher</button>
                 </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
-                </div>
-                <div id="login-error" class="form-error" hidden></div>
-                <button type="submit" class="btn btn-primary btn-block" id="login-btn">Sign in</button>
-            </form>
+            </section>
+            <section id="register-panel" hidden>
+                <h2>Create teacher account</h2>
+                <form id="register-form" novalidate>
+                    <div class="form-group">
+                        <label for="register-name">Full name</label>
+                        <input type="text" id="register-name" autocomplete="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-phone">Phone</label>
+                        <input type="tel" id="register-phone" autocomplete="tel" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-address">Address</label>
+                        <input type="text" id="register-address" autocomplete="street-address">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm password</label>
+                        <input type="password" id="register-confirm" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <div id="register-error" class="form-error" hidden></div>
+                    <button type="submit" class="btn btn-primary btn-block" id="register-btn">Create account</button>
+                </form>
+                <button type="button" class="login-link login-back" data-show-login>Back to sign in</button>
+            </section>
+            <section id="forgot-panel" hidden>
+                <h2>Reset password</h2>
+                <form id="forgot-form" novalidate>
+                    <div class="form-group">
+                        <label for="forgot-email">Account email</label>
+                        <input type="email" id="forgot-email" autocomplete="email" required>
+                    </div>
+                    <div id="forgot-error" class="form-error" hidden></div>
+                    <button type="submit" class="btn btn-primary btn-block" id="forgot-btn">Send reset link</button>
+                </form>
+                <button type="button" class="login-link login-back" data-show-login>Back to sign in</button>
+            </section>
+            <section id="reset-panel" hidden>
+                <h2>Choose a new password</h2>
+                <form id="reset-form" novalidate>
+                    <div class="form-group">
+                        <label for="reset-password">New password</label>
+                        <input type="password" id="reset-password" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reset-confirm">Confirm new password</label>
+                        <input type="password" id="reset-confirm" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <div id="reset-error" class="form-error" hidden></div>
+                    <button type="submit" class="btn btn-primary btn-block" id="reset-btn">Update password</button>
+                </form>
+                <button type="button" class="login-link login-back" data-show-login>Back to sign in</button>
+            </section>
             <div class="login-hint">
                 <strong>Demo logins</strong> (with dev profile):<br>
                 Admin: admin@oes.com / Admin@2026<br>

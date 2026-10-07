@@ -37,7 +37,10 @@ body {
 .login-view {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(rgba(22, 35, 61, .42), rgba(22, 35, 61, .42)), url("../images/background.jpg") center / cover no-repeat;
+    background-image: linear-gradient(rgba(22, 35, 61, .42), rgba(22, 35, 61, .42)), var(--login-background-image, url("../images/background.jpg"));
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     padding: 20px;
 }
 .login-card {
@@ -56,8 +59,13 @@ body {
     object-fit: contain;
 }
 .login-card h1 { font-size: 20px; margin: 10px 0 2px; }
+.login-card h2 { font-size: 16px; margin: 0 0 16px; }
 .login-sub { color: var(--text-muted); margin: 0 0 22px; font-size: 13px; }
 .login-card form { text-align: left; }
+.login-links { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.login-link { border: 0; padding: 4px 0; color: var(--primary-dark); background: none; font: inherit; font-size: 13px; cursor: pointer; text-decoration: underline; }
+.login-back { margin-top: 10px; }
+.login-status { margin: 0 0 14px; color: var(--success); line-height: 1.5; }
 .login-hint {
     margin-top: 20px; padding: 12px; font-size: 12.5px;
     background: var(--primary-soft); border-radius: 8px; color: #274a8f;

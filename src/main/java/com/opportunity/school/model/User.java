@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Getter
@@ -39,6 +41,13 @@ public class User {
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Teacher teacher;
+
+    @JsonIgnore
+    @Column(length = 64)
+    private String passwordResetTokenHash;
+
+    @JsonIgnore
+    private LocalDateTime passwordResetExpiresAt;
 
     public boolean isAdmin() {
         return role == Role.ADMIN;

@@ -18,6 +18,7 @@ com\opportunity\school\model\RemovalLog.class
 com\opportunity\school\service\ExamService.class
 com\opportunity\school\model\Exam$ExamBuilder.class
 com\opportunity\school\model\Payment$PaymentBuilder.class
+com\opportunity\school\dto\AuthDtos$ResetPasswordRequest.class
 com\opportunity\school\dto\PromotionDtos$PromotionLine$PromotionLineBuilder.class
 com\opportunity\school\dto\FeeDtos$FeeSummaryDto$FeeSummaryDtoBuilder.class
 com\opportunity\school\dto\StudentDtos$FeeStatusFlat.class
@@ -31,6 +32,7 @@ com\opportunity\school\dto\FeeDtos$FeeStatementDto$Line.class
 com\opportunity\school\model\FeeStructure.class
 com\opportunity\school\model\Student$StudentBuilder.class
 com\opportunity\school\dto\SubjectClassDtos$AddClassSubjectRequest.class
+com\opportunity\school\dto\AuthDtos$TeacherRegistrationRequest.class
 com\opportunity\school\dto\ExamDtos$StudentProgressDto.class
 com\opportunity\school\service\SubjectService.class
 com\opportunity\school\controller\AdminClassController.class
@@ -43,11 +45,14 @@ com\opportunity\school\dto\ExamDtos$MarkCell.class
 com\opportunity\school\model\Term$TermBuilder.class
 com\opportunity\school\model\ClassSubject$ClassSubjectBuilder.class
 com\opportunity\school\model\FeeStructure$FeeStructureBuilder.class
+com\opportunity\school\controller\AccountController.class
 com\opportunity\school\dto\FeeDtos$FeeSummaryDto.class
 com\opportunity\school\model\enums\Role.class
+com\opportunity\school\dto\AuthDtos$ChangeCredentialsRequest.class
 com\opportunity\school\dto\DashboardDtos.class
 com\opportunity\school\dto\DashboardDtos$AdminDashboardDto$ClassCount$ClassCountBuilder.class
 com\opportunity\school\dto\TeacherDtos$RemoveTeacherRequest.class
+com\opportunity\school\dto\AuthDtos$ForgotPasswordRequest.class
 com\opportunity\school\dto\SubjectClassDtos$SubjectRequest.class
 com\opportunity\school\repository\EnrollmentRepository.class
 com\opportunity\school\controller\AdminPromotionController.class

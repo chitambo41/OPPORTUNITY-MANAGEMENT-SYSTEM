@@ -60,6 +60,10 @@ environment variables — no code change needed:
 | `DB_USER`     | `root`             | MySQL user       |
 | `DB_PASSWORD` | *(empty)*          | MySQL password   |
 | `JWT_SECRET`  | built-in dev key   | **Change in production** |
+| `APP_PUBLIC_URL` | `http://localhost:8081` | Base URL used in password-reset links |
+| `MAIL_FROM` | `no-reply@opportunity-school.local` | Password-reset sender address |
+| `SPRING_MAIL_HOST` / `SPRING_MAIL_PORT` | unset | SMTP server for password-reset email |
+| `SPRING_MAIL_USERNAME` / `SPRING_MAIL_PASSWORD` | unset | SMTP credentials |
 
 ## Running the App
 
@@ -79,7 +83,11 @@ mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
 ./mvnw spring-boot:run
 ```
 
-Then open **http://localhost:8080** — the SPA login screen is served from the same process.
+Then open **http://localhost:8081/login.html** — the SPA login screen is served from the same process.
+
+Teacher self-registration is available from the login screen. Password-reset links are emailed
+when SMTP is configured. In the `dev` profile without SMTP, the reset link is written to the
+application log for local testing; configure SMTP and `APP_PUBLIC_URL` before deployment.
 
 > Building/running on a very new JDK (e.g. 26) from Git Bash: first run
 > `export JAVA_HOME="/c/Program Files/Java/jdk-26"` (adjust path to your JDK).
@@ -117,14 +125,22 @@ the backend enforces the same rules with role checks + JWT.
 
 ## API Summary
 
-Base URL: `http://localhost:8080`. All endpoints except `POST /api/auth/login` require the
-`Authorization: Bearer <token>` header. Errors return `{timestamp, status, message}`.
+Base URL: `http://localhost:8081`. Public auth endpoints are listed below; other endpoints require
+the `Authorization: Bearer <token>` header. Errors return `{timestamp, status, message}`.
 
 ### Auth — `/api/auth`
 | Method | Path     | Description |
 |--------|----------|-------------|
 | POST   | `/login` | Email + password → `{token, user}` |
+| POST   | `/register` | Create a teacher account (role is always TEACHER) |
+| POST   | `/forgot-password` | Request a one-time, expiring reset link by email |
+| POST   | `/reset-password` | Set a password using a valid reset token |
 | GET    | `/me`    | Current authenticated user |
+
+### Account — `/api/account` (authenticated)
+| Method | Path | Description |
+|--------|------|-------------|
+| PUT | `/credentials` | Change email and/or password after confirming the current password |
 
 ### Admin — `/api/admin/**` (ADMIN only)
 | Module | Endpoints |
@@ -197,5 +213,6 @@ students, dry-run behaviour and error handling.
 - The JWT is stored in `localStorage` (`oes_token`); any 401 clears it and returns to the
   login view.
 - Report cards open a print-optimized view (`css/print.css`, page-break per student).
-#   O P P O R T U N I T Y - M A N A G E M E N T - S Y S T E M  
+#   O P P O R T U N I T Y - M A N A G E M E N T - S Y S T E M 
+ 
  
