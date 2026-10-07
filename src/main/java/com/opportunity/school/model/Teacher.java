@@ -42,6 +42,15 @@ public class Teacher {
     @Column
     private LocalDate joinDate;
 
+    @JsonIgnore
+    @Lob
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
+    @JsonIgnore
+    @Column(name = "profile_picture_content_type", length = 32)
+    private String profilePictureContentType;
+
     /** Login account for this teacher (optional; admins may not have one). */
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

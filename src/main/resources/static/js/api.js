@@ -58,6 +58,20 @@
         return data;
     }
 
+    async function getBlob(url) {
+        const headers = {};
+        const token = getToken();
+        if (token) headers.Authorization = 'Bearer ' + token;
+        const response = await fetch(url, { headers });
+        if (response.status === 401) {
+            onUnauthorized();
+            throw { status: 401, message: 'Session expired. Please log in again.' };
+        }
+        if (response.status === 404) return null;
+        if (!response.ok) throw { status: response.status, message: 'Could not load profile picture' };
+        return response.blob();
+    }
+
     function clearSession() {
         setToken(null);
         setUser(null);
@@ -65,6 +79,7 @@
 
     window.API = {
         get: (url, opts) => request('GET', url, null, opts),
+        getBlob,
         post: (url, body, opts) => request('POST', url, body, opts),
         put: (url, body, opts) => request('PUT', url, body, opts),
         del: (url, body, opts) => request('DELETE', url, body, opts),

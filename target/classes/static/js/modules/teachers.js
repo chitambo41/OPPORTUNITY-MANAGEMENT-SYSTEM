@@ -60,10 +60,12 @@
                 { label: 'Phone', key: 'phone' },
                 { label: 'Joined', render: r => UI.fmtDate(r.joinDate) },
                 { label: 'Status', render: r => r.active ? UI.badge('ACTIVE', 'green') : UI.badge('REMOVED', 'red') },
-                { label: '', tdClass: 'actions', render: r => r.active
-                    ? `<button class="btn btn-outline btn-sm" data-edit="${r.id}">Edit</button>
-                       <button class="btn btn-danger btn-sm" data-remove="${r.id}" data-name="${UI.esc(r.fullName)}">Remove</button>`
-                    : UI.badge('LOGIN DISABLED', 'gray') },
+                     { label: '', tdClass: 'actions', render: r => `
+                          <button class="btn btn-outline btn-sm" data-profile="${r.id}">Profile</button>
+                          ${r.active
+                                ? `<button class="btn btn-outline btn-sm" data-edit="${r.id}">Edit</button>
+                                    <button class="btn btn-danger btn-sm" data-remove="${r.id}" data-name="${UI.esc(r.fullName)}">Remove</button>`
+                                : UI.badge('LOGIN DISABLED', 'gray')}` },
             ],
             rows: page.content,
             empty: state.tab === 'removed' ? 'No removed teachers' : 'No teachers yet. Add your first teacher!',
@@ -72,6 +74,10 @@
         box.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => {
             const t = page.content.find(x => String(x.id) === b.dataset.edit);
             editDialog(t, el);
+        }));
+        box.querySelectorAll('[data-profile]').forEach(b => b.addEventListener('click', () => {
+            const teacher = page.content.find(item => String(item.id) === b.dataset.profile);
+            profileDialog(teacher);
         }));
         box.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => {
             removeDialog(Number(b.dataset.remove), b.dataset.name, el);
@@ -109,6 +115,21 @@
                 load(el);
             },
         });
+    }
+
+    function profileDialog(teacher) {
+        const { overlay } = UI.modal({
+            title: `${teacher.fullName} — ${teacher.staffNumber || 'Teacher profile'}`,
+            body: `
+                ${UI.profilePhotoMarkup(teacher.fullName)}
+                <dl class="profile-details">
+                    <div><dt>Email</dt><dd>${UI.esc(teacher.email)}</dd></div>
+                    <div><dt>Phone</dt><dd>${UI.esc(teacher.phone || '—')}</dd></div>
+                    <div><dt>Address</dt><dd>${UI.esc(teacher.address || '—')}</dd></div>
+                    <div><dt>Join date</dt><dd>${UI.fmtDate(teacher.joinDate)}</dd></div>
+                </dl>`,
+        });
+        UI.bindProfilePhoto(overlay, 'teachers', teacher.id);
     }
 
     function editDialog(t, el) {

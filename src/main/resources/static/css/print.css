@@ -39,14 +39,21 @@
 
     /* Receipt */
     .receipt-sheet {
-        width: 320px; margin: 0 auto; border: 1.5px solid #333;
+        width: 440px; max-width: 100%; margin: 0 auto; border: 1.5px solid #333;
         padding: 14px 16px; font-size: 12.5px; color: #000;
     }
-    .receipt-sheet h2 { text-align: center; margin: 0 0 2px; font-size: 16px; }
+    .receipt-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px; }
+    .receipt-header img { width: 48px; height: 48px; object-fit: contain; }
+    .receipt-sheet h2 { text-align: center; margin: 0; font-size: 16px; }
     .receipt-sheet .rc-sub { text-align: center; font-size: 11px; margin-bottom: 10px; }
     .receipt-sheet table { width: 100%; border-collapse: collapse; }
     .receipt-sheet td { padding: 3px 2px; vertical-align: top; }
     .receipt-sheet td.r { text-align: right; font-weight: 600; }
+    .receipt-payments-title { font-size: 12px; margin: 12px 0 4px; }
+    .receipt-sheet .receipt-payments { font-size: 10px; }
+    .receipt-sheet .receipt-payments th, .receipt-sheet .receipt-payments td { border-bottom: 1px solid #bbb; padding: 4px 2px; text-align: left; }
+    .receipt-sheet .receipt-payments th:last-child, .receipt-sheet .receipt-payments td:last-child { text-align: right; }
+    .receipt-sheet .receipt-payments tfoot tr:first-child td { border-top: 1.5px solid #333; padding-top: 6px; }
     .receipt-sheet .total-row td { border-top: 1.5px solid #333; font-size: 13.5px; padding-top: 6px; }
     .receipt-sheet .thanks { text-align: center; margin-top: 14px; font-size: 11px; }
 

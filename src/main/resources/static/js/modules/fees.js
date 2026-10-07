@@ -154,7 +154,13 @@
                     });
                     UI.toast(`Payment recorded — receipt ${res.receiptNumber}`, 'success', 6000);
                     close();
-                    showReceipt(res.receiptNumber);
+                    const statement = await API.admin.fees.statement(studentId);
+                    const paidLine = (statement.lines || []).find(line => Number(line.termId) === Number(state.termId));
+                    if (paidLine && paidLine.status === 'PAID') {
+                        showTermReceipt(statement.student, paidLine);
+                    } else {
+                        showReceipt(res.receiptNumber);
+                    }
                     done();
                 } catch (err) {
                     UI.toast(err.message, 'error', 6000);
@@ -168,7 +174,10 @@
         const root = document.getElementById('print-root');
         root.innerHTML = `
         <div class="receipt-sheet">
-            <h2>OPPORTUNITY NURSERY SCHOOL</h2>
+            <header class="receipt-header">
+                <img src="/images/oes-logo.jpg" alt="Opportunity Nursery School logo">
+                <h2>OPPORTUNITY NURSERY SCHOOL</h2>
+            </header>
             <div class="rc-sub">Official Fee Receipt</div>
             <table>
                 <tr><td>Receipt #:</td><td class="r">${UI.esc(r.receiptNumber)}</td></tr>
@@ -189,6 +198,48 @@
         });
     }
 
+    function showTermReceipt(student, line) {
+        const payments = line.payments || [];
+        const receiptNumbers = payments.map(payment => UI.esc(payment.receiptNumber)).join(', ');
+        const root = document.getElementById('print-root');
+        root.innerHTML = `
+        <div class="receipt-sheet">
+            <header class="receipt-header">
+                <img src="/images/oes-logo.jpg" alt="Opportunity Nursery School logo">
+                <h2>OPPORTUNITY NURSERY SCHOOL</h2>
+            </header>
+            <div class="rc-sub">Official Term Fee Receipt</div>
+            <table>
+                <tr><td>Receipts #:</td><td class="r">${receiptNumbers}</td></tr>
+                <tr><td>Student:</td><td class="r">${UI.esc(student.fullName)}</td></tr>
+                <tr><td>Admission #:</td><td class="r">${UI.esc(student.admissionNumber)}</td></tr>
+                <tr><td>Term:</td><td class="r">${UI.esc((line.termNumber || '').replace('_', ' '))} ${line.year}</td></tr>
+            </table>
+            <h3 class="receipt-payments-title">Payments received</h3>
+            <table class="receipt-payments">
+                <thead><tr><th>Date</th><th>Method</th><th>Receipt #</th><th>Amount</th></tr></thead>
+                <tbody>${payments.map(payment => `
+                    <tr>
+                        <td>${UI.fmtDate(payment.paymentDate)}</td>
+                        <td>${UI.esc(payment.method)}</td>
+                        <td>${UI.esc(payment.receiptNumber)}</td>
+                        <td class="r">${UI.money(payment.amount)}</td>
+                    </tr>`).join('')}</tbody>
+                <tfoot>
+                    <tr><td colspan="3"><b>Total paid for term:</b></td><td class="r"><b>${UI.money(line.paid)}</b></td></tr>
+                    <tr><td colspan="3">Balance:</td><td class="r">${UI.money(line.balance)}</td></tr>
+                </tfoot>
+            </table>
+            <div class="thanks">Thank you! — Keep this receipt safe.</div>
+        </div>`;
+        setTimeout(() => window.print(), 60);
+        UI.confirmDialog({
+            title: 'Receipt ready',
+            message: `Consolidated receipt for ${UI.esc((line.termNumber || '').replace('_', ' '))} ${line.year} was sent to the printer dialog.`,
+            danger: false, confirmText: 'Done',
+        });
+    }
+
     async function printReceiptForTerm(studentId, termId) {
         const statement = await API.admin.fees.statement(studentId);
         const line = (statement.lines || []).find(item => Number(item.termId) === termId);
@@ -196,29 +247,7 @@
             UI.toast('No paid receipt is available for this term', 'warn');
             return;
         }
-        if (line.payments.length === 1) {
-            await showReceipt(line.payments[0].receiptNumber);
-            return;
-        }
-
-        const { overlay, close } = UI.modal({
-            title: `Select receipt — ${statement.student.fullName}`,
-            body: UI.table({
-                columns: [
-                    { label: 'Receipt', key: 'receiptNumber' },
-                    { label: 'Date', render: payment => UI.fmtDate(payment.paymentDate) },
-                    { label: 'Method', key: 'method' },
-                    { label: 'Amount', render: payment => UI.money(payment.amount) },
-                    { label: '', tdClass: 'actions', render: payment =>
-                        `<button class="btn btn-outline btn-sm" data-print-receipt="${UI.esc(payment.receiptNumber)}">Print</button>` },
-                ],
-                rows: line.payments,
-            }),
-        });
-        overlay.querySelectorAll('[data-print-receipt]').forEach(button => button.addEventListener('click', () => {
-            close();
-            showReceipt(button.dataset.printReceipt);
-        }));
+        showTermReceipt(statement.student, line);
     }
 
     // ---------------- Tab: fee structures ----------------

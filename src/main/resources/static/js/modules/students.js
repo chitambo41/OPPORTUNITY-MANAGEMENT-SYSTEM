@@ -215,6 +215,7 @@
             title: `${s.fullName} — ${s.admissionNumber}`,
             large: true,
             body: `
+            ${UI.profilePhotoMarkup(s.fullName)}
                 <div class="cards-grid">
                     <div class="stat-card"><div class="stat-label">Attendance</div>
                         <div class="stat-value">${p.attendance.percentage}%</div>
@@ -252,6 +253,7 @@
                     empty: 'No fee records',
                 })}`,
         });
+            UI.bindProfilePhoto(overlay, 'students', id);
         overlay.querySelectorAll('[data-print-fee]').forEach(button => button.addEventListener('click', () =>
             window.FeeReceipts.printForTerm(s.id, Number(button.dataset.printFee))));
     }

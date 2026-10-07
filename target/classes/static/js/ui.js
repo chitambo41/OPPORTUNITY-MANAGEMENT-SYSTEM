@@ -33,6 +33,77 @@
         return { overlay, close };
     }
 
+    function profilePhotoMarkup(name) {
+        const initials = String(name || '?').trim().split(/\s+/).slice(0, 2).map(part => part[0] || '').join('').toUpperCase();
+        return `
+            <div class="profile-photo-editor">
+                <div class="profile-photo-frame">
+                    <img data-profile-picture hidden alt="${esc(name)}">
+                    <span data-profile-placeholder>${esc(initials)}</span>
+                </div>
+                <div class="profile-photo-controls">
+                    <label class="btn btn-outline btn-sm profile-photo-select">
+                        <span data-profile-picture-label>Add profile picture</span>
+                        <input type="file" data-profile-picture-file accept="image/jpeg,image/png">
+                    </label>
+                    <small>JPEG or PNG, up to 5 MB</small>
+                </div>
+            </div>`;
+    }
+
+    async function bindProfilePhoto(root, type, id) {
+        const endpoint = `/api/admin/${type}/${id}/profile-picture`;
+        const image = root.querySelector('[data-profile-picture]');
+        const placeholder = root.querySelector('[data-profile-placeholder]');
+        const label = root.querySelector('[data-profile-picture-label]');
+        const input = root.querySelector('[data-profile-picture-file]');
+        let imageUrl = null;
+
+        const showPicture = blob => {
+            if (imageUrl) URL.revokeObjectURL(imageUrl);
+            imageUrl = blob ? URL.createObjectURL(blob) : null;
+            image.hidden = !imageUrl;
+            placeholder.hidden = !!imageUrl;
+            label.textContent = imageUrl ? 'Change profile picture' : 'Add profile picture';
+            if (imageUrl) image.src = imageUrl;
+        };
+
+        input.addEventListener('change', async () => {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                toast('Choose a JPEG or PNG image', 'error');
+                input.value = '';
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                toast('Profile pictures must be 5 MB or smaller', 'error');
+                input.value = '';
+                return;
+            }
+
+            input.disabled = true;
+            try {
+                const form = new FormData();
+                form.append('file', file);
+                await API.post(endpoint, form);
+                showPicture(await API.getBlob(endpoint));
+                toast('Profile picture updated');
+            } catch (error) {
+                toast(error.message || 'Could not upload profile picture', 'error');
+            } finally {
+                input.disabled = false;
+                input.value = '';
+            }
+        });
+
+        try {
+            showPicture(await API.getBlob(endpoint));
+        } catch (error) {
+            toast(error.message || 'Could not load profile picture', 'error');
+        }
+    }
+
     function confirmDialog({ title = 'Are you sure?', message, confirmText = 'Confirm', danger = true }) {
         return new Promise(resolve => {
             const { overlay, close } = modal({
@@ -198,7 +269,7 @@
     }
 
     window.UI = {
-        toast, modal, confirmDialog, formModal,
+        toast, modal, profilePhotoMarkup, bindProfilePhoto, confirmDialog, formModal,
         formHtml, readForm, requireFields, showFormError, clearFormErrors,
         table, badge, statusBadge, money, fmtDate, today, esc, debounce,
     };

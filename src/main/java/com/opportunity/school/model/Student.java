@@ -60,6 +60,15 @@ public class Student {
     private String notes;
 
     @JsonIgnore
+    @Lob
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
+    @JsonIgnore
+    @Column(name = "profile_picture_content_type", length = 32)
+    private String profilePictureContentType;
+
+    @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     @OrderBy("id ASC")
